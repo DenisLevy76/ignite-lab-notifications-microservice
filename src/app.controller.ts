@@ -9,6 +9,7 @@ import {
 import { randomUUID } from 'crypto';
 import { PrismaService } from './prisma/prisma.service';
 import { Notification } from 'prisma/prisma-client';
+import { CreateNotificationBody } from './prisma/CreateNotificationBody';
 
 @Controller('notifications')
 export class AppController {
@@ -22,12 +23,12 @@ export class AppController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createNotification(@Body() body: any) {
-    console.log(body);
+  async createNotification(@Body() body: CreateNotificationBody) {
+    const { category, content, recipientId } = body;
     const notification = await this.prismaService.notification.create({
       data: {
-        content: 'Você tem uma nova solicitação de amizade',
-        category: 'Social',
+        content,
+        category,
         recipientId: randomUUID(),
       },
     });
